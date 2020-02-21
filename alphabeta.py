@@ -3,7 +3,7 @@ from hex_skeleton import HexBoard
 import numpy as np
 
 # global vars
-_board_size: int = 6
+_board_size: int = 3
 _INF: float = 99999.0
 
 # initialize board with size n
@@ -20,7 +20,7 @@ def dummy_eval() -> float:
     return 5.0
 
 
-def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
+def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bool) -> float:
     if depth == 0 or board.is_game_over():
         return dummy_eval()
 
@@ -32,17 +32,27 @@ def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 
             for move in legals:
                 updated_board: HexBoard = _update_board(board, move, is_max)
-                g = max(g, minimax(updated_board, depth-1, not is_max))
+                g = max(g, alphabeta(updated_board,
+                                     depth-1, alpha, beta, not is_max))
+
+                alpha = max(alpha, g)
+                if beta <= alpha:
+                    break
 
         else:
             g: float = _INF
 
             for move in legals:
                 updated_board: HexBoard = _update_board(board, move, is_max)
-                g = min(g, minimax(updated_board, depth-1, not is_max))
+                g = min(g, alphabeta(updated_board,
+                                     depth-1, alpha, beta, not is_max))
+
+                beta = min(beta, g)
+                if beta <= alpha:
+                    break
 
         return g
 
 
-final = minimax(_board, 4, True)
+final = alphabeta(board=_board, depth=4, alpha=1.0, beta=1.0, is_max=True)
 print(final)
