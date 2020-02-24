@@ -1,5 +1,4 @@
 #### For now the file only contains the user input. To be expanded to the whole program
-from typing import Any, Tuple, Union
 
 from hex_skeleton import HexBoard
 import alphabeta as ab
