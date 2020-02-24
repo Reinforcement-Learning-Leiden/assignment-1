@@ -117,3 +117,7 @@ class HexBoard:
 
     def undo_move(self):
         pass
+
+    ###### Faezeh added
+    def get_board_size(self):
+      return self.size
