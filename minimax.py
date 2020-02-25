@@ -51,7 +51,7 @@ def simple_dijkstra(board: HexBoard, source, is_max):
 
         for v in neighbors:
             if v in Q: # Only check neighbours that are also in "Q"
-                len_u_v = 1 if board.is_color(v, color) else 0 # this isn't working as intended i think...
+                len_u_v = 0 if board.is_color(v, color) else 1 # this isn't working as intended i think...
                 alt = dist[u] + len_u_v
                 if alt < dist[v]:
                     dist[v] = alt
@@ -93,6 +93,6 @@ hb.place((1,1), hb.BLUE)
 hb.place((2,1), hb.RED)
 hb.place((4, 0), hb.BLUE)
 hb.print()
-S = simple_dijkstra(hb, (0, 3), True) # use True for BLUE eval, False for RED eval
+S = simple_dijkstra(hb, (0, 10), True) # use True for BLUE eval, False for RED eval
 print(S)
 
