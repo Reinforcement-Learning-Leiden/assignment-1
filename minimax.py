@@ -88,12 +88,11 @@ def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 # final = minimax(_board, 4, True)
 # print(final)
 
-hb = HexBoard(4)
+hb = HexBoard(11)
 hb.place((1,1), hb.BLUE)
 hb.place((2,1), hb.RED)
-# hb.place((0,2), hb.RED)
-# hb.place((0,3), hb.RED)
+hb.place((4, 0), hb.BLUE)
 hb.print()
-S = simple_dijkstra(hb, (1,0), True)
+S = simple_dijkstra(hb, (0, 3), True) # use True for BLUE eval, False for RED eval
 print(S)
 
