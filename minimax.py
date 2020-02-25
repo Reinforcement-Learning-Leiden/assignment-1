@@ -3,8 +3,12 @@ from graph import Graph
 
 import numpy as np
 
+# probably have to do this better later
+from hexagon import Hexagon
+# Remove when refactoring
+
 # global vars
-_board_size: int = 6
+_board_size: int = 3
 _INF: float = 99999.0
 
 # initialize board with size n
@@ -18,19 +22,18 @@ def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
 def dummy_eval() -> float:
     return np.random.randint(0, 10)
 
-def dijkstra_eval():
+def dijkstra_eval(board: HexBoard, is_max: bool):
     # TODO finish implementing dijkstra in graph class
-    pass
+    color = board.BLUE if is_max else board.RED
+    graph = Graph(board)
+    from_hex = Hexagon((0,1), board)
+    return graph.dijkstra(from_hex, is_max)
 
 def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 
-    graph = Graph(board)
-    graph.print_vertices()
-
     if depth == 0 or board.is_game_over():
-        # return smart_eval(board, is_max, count)
-        return dummy_eval()
-        
+        # return dummy_eval()
+        return dijkstra_eval(board, is_max)
 
     legals = board.get_move_list()
     if legals:

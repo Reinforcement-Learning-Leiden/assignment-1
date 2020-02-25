@@ -8,12 +8,14 @@ class Hexagon:
         self.coords = coordinate
         self.board = board
         
+        # self.value = 0 # I'm not too sure about this one...
         self.path_len_fs = np.inf
         self.path_verts_fs: [Hexagon] = [] # A list of hexagons
         self.neighbors: [Hexagon] = []
+        self.color = self.board.get_color(self.coords)
 
     # Not sure if this method is super useful here, maybe replace to Graph class
     def get_neighbour_hexagons(self, list_of_neighbor_coords):
         for coord in list_of_neighbor_coords:
             self.neighbors.append(Hexagon(coord, self.board))
-        return self.neighbors
+        # return self.neighbors
