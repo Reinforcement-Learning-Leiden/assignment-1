@@ -120,6 +120,13 @@ class HexBoard:
         for i, p in self.board:
             vertex_set.append((i, p))
         return vertex_set
+    
+    def get_borders(self, color):
+        borders = []
+        for i, p in self.board:
+            if self.border(color, (i, p)):
+                borders.append((i, p))
+        return borders
 
     def undo_move(self):
         pass
