@@ -114,6 +114,12 @@ class HexBoard:
             if self.is_empty((i, p)):
                 move_list.append((i, p))
         return move_list
+    
+    def get_all_vertices(self):
+        vertex_set = []
+        for i, p in self.board:
+            vertex_set.append((i, p))
+        return vertex_set
 
     def undo_move(self):
         pass
