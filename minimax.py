@@ -34,9 +34,21 @@ def simple_dijkstra(board: HexBoard, source, is_max):
         # print(f"U IS: {u}")
         Q.remove(u)
 
-        neighbors = board.get_neighbors(u)
         color = board.BLUE if is_max else board.RED
-        
+        # begin reverse iteration step
+        # this only happens IF we get to the target hexagon which is a border of the corresponding color
+        if board.border(color, u):
+            S = []
+            if prev[u] or u == source:
+                while u:
+                    S.insert(0, u)
+                    u = prev[u]
+            print(f"S IS: {S}")
+            return float(len(S))
+        # end reverse iteration step
+
+        neighbors = board.get_neighbors(u)
+
         for v in neighbors:
             if v in Q: # Only check neighbours that are also in "Q"
                 len_u_v = 1 if board.is_color(v, color) else 0 # this isn't working as intended i think...
@@ -51,9 +63,7 @@ def simple_dijkstra(board: HexBoard, source, is_max):
 def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 
     if depth == 0 or board.is_game_over():
-        # return dummy_eval()
-        # return dijkstra_eval(board, is_max)
-        return simple_dijkstra(board, (0, 1), is_max)
+        return simple_dijkstra(board, (1,1), is_max)
 
     legals = board.get_move_list()
     if legals:
@@ -78,10 +88,12 @@ def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 # final = minimax(_board, 4, True)
 # print(final)
 
-hb = HexBoard(3)
+hb = HexBoard(4)
 hb.place((1,1), hb.BLUE)
+hb.place((2,1), hb.RED)
+# hb.place((0,2), hb.RED)
+# hb.place((0,3), hb.RED)
 hb.print()
-
-dist, prev = simple_dijkstra(hb, (1,1), False)
-print(dist)
+S = simple_dijkstra(hb, (1,0), True)
+print(S)
 
