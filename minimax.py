@@ -1,4 +1,5 @@
 from hex_skeleton import HexBoard
+import copy
 
 import numpy as np
 
@@ -10,6 +11,7 @@ _INF: float = 99999.0
 _board = HexBoard(_board_size)
 
 def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
+    board = copy.deepcopy(board) # I think this was the problem with the minimax core, it was using a reference instead of a deep copy
     color = board.BLUE if is_max else board.RED
     board.place(l_move, color)
     return board

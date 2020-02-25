@@ -10,6 +10,8 @@ _INF: float = 99999.0
 # initialize board with size n
 _board = HexBoard(_board_size)
 
+# NOTE: THE AI SHOULD START WITH A RANDOM MOVE, OR MAYBE JUST A SET MOVE
+
 def simple_dijkstra(board: HexBoard, source, is_max):
     
     Q = set()
@@ -82,6 +84,7 @@ def dijkstra_eval(board: HexBoard):
     return best_eval_score
 
 def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
+    board = copy.deepcopy(board) # I think this was the problem with the minimax core, it was using a reference instead of a deep copy
     color = board.BLUE if is_max else board.RED
     board.place(l_move, color)
     return board
@@ -130,5 +133,5 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
         return dijkstra_eval(board)
 
 
-final = alphabeta(board=_board, depth=5, alpha=-np.inf, beta=np.inf, is_max=True)
+final = alphabeta(board=_board, depth=3, alpha=-np.inf, beta=np.inf, is_max=True)
 print(final)
