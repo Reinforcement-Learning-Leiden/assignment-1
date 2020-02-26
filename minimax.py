@@ -122,7 +122,7 @@ def dijkstra_eval(board: HexBoard):
 def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 
     if depth == 0 or board.is_game_over():
-        # board.print() # For some reason it doesn't break the loop here
+        board.print()
         return dijkstra_eval(board)
 
     legals = board.get_move_list()
@@ -144,9 +144,12 @@ def minimax(board: HexBoard, depth: int, is_max: bool) -> float:
 
         return g
 
+## UNCOMMENT BELOW IF YOU WANT TO START THE GAME FROM A FIXED STATE
+# _board.place((1,1), _board.BLUE)
+# _board.place((0,1), _board.RED)
 
 # Minimax Test Code
-eval_score = minimax(_board, 4, True)
+eval_score = minimax(_board, 2, True)
 print(f"Eval score: {eval_score}")
 
 # # Debug Code for eval

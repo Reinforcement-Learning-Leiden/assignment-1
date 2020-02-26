@@ -4,7 +4,7 @@ import copy
 import numpy as np
 
 # global vars
-_board_size: int = 4
+_board_size: int = 6
 _INF: float = 99999.0
 
 # initialize board with size n
@@ -132,6 +132,9 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
     else:
         return dijkstra_eval(board)
 
+## UNCOMMENT BELOW IF YOU WANT TO START THE GAME IN A FIXED STATE
+# _board.place((1,1), _board.BLUE)
+# _board.place((0,1), _board.RED)
 
-final = alphabeta(board=_board, depth=3, alpha=-np.inf, beta=np.inf, is_max=True)
-print(final)
+eval_score = alphabeta(board=_board, depth=3, alpha=-np.inf, beta=np.inf, is_max=True)
+print(eval_score)
