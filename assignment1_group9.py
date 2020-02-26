@@ -4,6 +4,14 @@ from hex_skeleton import HexBoard
 import alphabeta as ab
 import random
 
+win_message = "******************************************\n\
+*               YOU WIN                  *\n\
+******************************************"
+
+loss_message = "******************************************\n\
+*              YOU LOSE                  *\n\
+******************************************"
+
 def human_input(size_of_board): # TOASK: is it efficient to pass board as arguement? better way to retrieve board size?
     input_user = input("Your Turn: ")
     if ',' in input_user:
@@ -28,7 +36,7 @@ def move_generator_random(size_of_board):
 
 def main():
     print('the program plays Blue(LeftToRight) and the user plays Red(UpToButtom)')
-    board = HexBoard(11)
+    board = HexBoard(4)
     num_of_cells = board.get_board_size() * board.get_board_size()
     for nc in range(int(num_of_cells/2)):
         move_human = human_input(board.get_board_size())
@@ -38,16 +46,14 @@ def main():
         board = ab._update_board(board, move_human ,False)
         board.print()
         if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
-            print('you win')
+            print(win_message)
             board.print()
             break
-        move_program = move_generator_random(board.get_board_size())
-        while not move_program in board.get_move_list():
-            move_program = move_generator_random(board.get_board_size())
+        move_program = ab.alphabeta_move(board, 3)
         board = ab._update_board(board, move_program, True)
         board.print()
         if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
-            print('you lose')
+            print(loss_message)
             board.print()
             break
 
