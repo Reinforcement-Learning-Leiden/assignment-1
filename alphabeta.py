@@ -11,6 +11,7 @@ _INF: float = 99999.0
 _board = HexBoard(_board_size)
 
 # NOTE: THE AI SHOULD START WITH A RANDOM MOVE, OR MAYBE JUST A SET MOVE
+# NOTE: THE AI DOES NOT KNOW HOW TO MAKE THE FINISHING BLOW YET
 
 def simple_dijkstra(board: HexBoard, source, is_max):
     
@@ -88,7 +89,7 @@ def dijkstra_eval(board: HexBoard):
 
     return best_eval_score
 
-#TODO: (CODE CLEANUP) Make update board take a color as param instead of an is_max bool
+#TODO: (CODE CLEANUP) Make update board take a color as param instead of an is_max bool?
 def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
     """
     Makes a deep copy of the board and updates the board state on that copy.
@@ -110,8 +111,11 @@ def alphabeta_move(board:HexBoard, depth:int):
     best_score = -np.inf
     best_move = None
     for move in legal_moves:
-        # board.place(move, board.BLUE) # If i do it this way, I have to make an undo func
         sim_board = _update_board(board, move, is_max=True)
+        if sim_board.check_win(sim_board.BLUE): # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
+            print(f"KILLER MOVE FOUND: {move}")
+            best_move = move
+            break
         score = alphabeta(sim_board, depth=depth, alpha=-np.inf, beta=np.inf, is_max=True) # For some reason performs better if you use is_max=False
         print(f"CURRENT SCORE: {score}")
         if score > best_score:
