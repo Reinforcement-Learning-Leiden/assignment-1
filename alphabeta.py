@@ -1,5 +1,6 @@
 from hex_skeleton import HexBoard
 import copy
+from priority_queue import PriorityQueue
 
 import numpy as np
 
@@ -13,46 +14,54 @@ _board = HexBoard(_board_size)
 # NOTE: THE AI SHOULD START WITH A RANDOM MOVE, OR MAYBE JUST A SET MOVE
 # NOTE: THE AI DOES NOT KNOW HOW TO MAKE THE FINISHING BLOW YET
 
+
 def simple_dijkstra(board: HexBoard, source, is_max):
-    
-    Q = set()
-    V_set = board.get_all_vertices()
+
+    Q = PriorityQueue()
+    # V_set = board.get_all_vertices()
+    V_set = board.get_move_list()
     dist = {}
-    dist_clone = {} # I made a clone of dist to retain the information in dist
+    # dist_clone = {}  # I made a clone of dist to retain the information in dist
     prev = {}
     for v in V_set:
-        dist[v] = np.inf
-        dist_clone[v] = np.inf # clone
-        prev[v] = None
-        Q.add(v)
+        if v != source:
+            dist[v] = np.inf
+            # dist_clone[v] = np.inf  # clone
+            prev[v] = None
+        Q.add_task(task=v, priority=dist[v])  # add task with prio
     dist[source] = 0
-    dist_clone[source] = dist[source] # clone
+    # dist_clone[source] = dist[source]  # clone
 
-    while len(Q) != 0:
-        u = min(dist, key=dist.get)
-        Q.remove(u)
+    while len(Q.pq) != 0:
+        # u = min(dist, key=dist.get)
+        u = Q.extract_min()
 
         color = board.BLUE if is_max else board.RED
 
         neighbors = board.get_neighbors(u)
 
         for v in neighbors:
-            if v in Q: # Only check neighbours that are also in "Q"
-                len_u_v = -1 if board.is_color(v, color) else 1 # this isn't working as intended i think...
+            if v in Q.pq:  # Only check neighbours that are also in "Q"
+                # this isn't working as intended i think...
+                len_u_v = -1 if board.is_color(v, color) else 1
                 ### BLOCK TO MAKE AI MORE AGGRESSIVE ###
-                if board.border(color, v): # If there is a move that reaches the border in the simulation
-                    if board.check_win(color): # And it results in a win
-                        len_u_v = -2 # Make that move more valuable
+                # If there is a move that reaches the border in the simulation
+                if board.border(color, v):
+                    if board.check_win(color):  # And it results in a win
+                        len_u_v = -2  # Make that move more valuable
                 ### END OF AGGRO BLOCK ###
                 alt = dist[u] + len_u_v
                 if alt < dist[v]:
                     dist[v] = alt
-                    dist_clone[v] = dist[v]
+                    # dist_clone[v] = dist[v]
                     prev[v] = u
+                    Q.add_task(v, alt)
         # We pop "u" from the distance dict to ensure that the keys match the ones in "Q"
-        dist.pop(u) # This is also why we need the clone, or else we'll return an empty dict
-    
-    return dist_clone, prev
+        # This is also why we need the clone, or else we'll return an empty dict
+        # dist.pop(u)
+
+    return dist, prev
+
 
 def get_shortest_path(board: HexBoard, distances, color):
     """Gets the shortest path to a border and returns the length as score"""
@@ -65,6 +74,7 @@ def get_shortest_path(board: HexBoard, distances, color):
             shortest = distances[border]
         # print(f"Current shortest: {shortest}")
     return shortest
+
 
 def dijkstra_eval(board: HexBoard):
     """
@@ -89,7 +99,9 @@ def dijkstra_eval(board: HexBoard):
 
     return best_eval_score
 
-#TODO: (CODE CLEANUP) Make update board take a color as param instead of an is_max bool?
+# TODO: (CODE CLEANUP) Make update board take a color as param instead of an is_max bool?
+
+
 def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
     """
     Makes a deep copy of the board and updates the board state on that copy.
@@ -97,7 +109,8 @@ def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
     The reason for using deepcopy is because python passes objects by reference
     if you use the "=" operator
     """
-    board = copy.deepcopy(board) # I think this was the problem with the minimax core, it was using a reference instead of a deep copy
+    board = copy.deepcopy(
+        board)  # I think this was the problem with the minimax core, it was using a reference instead of a deep copy
     color = board.BLUE if is_max else board.RED
     board.place(l_move, color)
     return board
@@ -106,7 +119,8 @@ def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
 def dummy_eval() -> float:
     return np.random.randint(0, 10)
 
-def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
+
+def alphabeta_move(board: HexBoard, depth: int, is_max: bool, show_AI=False):
     """
     Set is_max to True for BLUE player, and False for RED player.
     You can set the depth to whatever you want really, just don't go too deep it'll take forever.
@@ -117,17 +131,23 @@ def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
     best_move = None
     for move in legal_moves:
         sim_board = _update_board(board, move, is_max)
-        if sim_board.check_win(sim_board.BLUE if is_max else sim_board.RED): # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
-            if show_AI: print(f"KILLER MOVE FOUND: {move}")
+        # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
+        if sim_board.check_win(sim_board.BLUE if is_max else sim_board.RED):
+            if show_AI:
+                print(f"KILLER MOVE FOUND: {move}")
             best_move = move
             best_score = np.inf
             break
-        score = alphabeta(sim_board, depth=depth, alpha=-np.inf, beta=np.inf, is_max=is_max) # For some reason performs better if you use is_max=False
-        if show_AI: print(f"CURRENT SCORE: {score} for MOVE: {move}")
+        # For some reason performs better if you use is_max=False
+        score = alphabeta(sim_board, depth=depth, alpha=-
+                          np.inf, beta=np.inf, is_max=is_max)
+        if show_AI:
+            print(f"CURRENT SCORE: {score} for MOVE: {move}")
         if score > best_score:
             best_score = score
             best_move = move
-    if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
+    if show_AI:
+        print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
     return best_move
 
 
@@ -162,14 +182,14 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
                 beta = min(beta, g)
                 if beta <= alpha:
                     break
-    
+
         return g
-    
+
     else:
         print("NO MORE LEGAL MOVES LEFT")
         return dijkstra_eval(board)
 
-## UNCOMMENT BELOW IF YOU WANT TO START THE GAME IN A FIXED STATE
+# UNCOMMENT BELOW IF YOU WANT TO START THE GAME IN A FIXED STATE
 # _board.place((1,1), _board.BLUE)
 # _board.place((0,2), _board.RED)
 
