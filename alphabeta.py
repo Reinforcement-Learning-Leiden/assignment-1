@@ -39,11 +39,11 @@ def simple_dijkstra(board: HexBoard, source, is_max):
         for v in neighbors:
             if v in Q: # Only check neighbours that are also in "Q"
                 len_u_v = -1 if board.is_color(v, color) else 1 # this isn't working as intended i think...
-                ### KILLER MOVE TEST ###
-                if board.border(color, v): # If there is a move that reaches the border
-                    if board.check_win(color):
-                        len_u_v = -2
-                ### KILLER MOVE TEST ###
+                ### BLOCK TO MAKE AI MORE AGGRESSIVE ###
+                if board.border(color, v): # If there is a move that reaches the border in the simulation
+                    if board.check_win(color): # And it results in a win
+                        len_u_v = -2 # Make that move more valuable
+                ### END OF AGGRO BLOCK ###
                 alt = dist[u] + len_u_v
                 if alt < dist[v]:
                     dist[v] = alt
@@ -106,22 +106,28 @@ def _update_board(board: HexBoard, l_move, is_max: bool) -> HexBoard:
 def dummy_eval() -> float:
     return np.random.randint(0, 10)
 
-def alphabeta_move(board:HexBoard, depth:int):
+def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
+    """
+    Set is_max to True for BLUE player, and False for RED player.
+    You can set the depth to whatever you want really, just don't go too deep it'll take forever.
+    Set show_AI to True if you want to see it's scoring process
+    """
     legal_moves = board.get_move_list()
     best_score = -np.inf
     best_move = None
     for move in legal_moves:
-        sim_board = _update_board(board, move, is_max=True)
-        if sim_board.check_win(sim_board.BLUE): # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
-            print(f"KILLER MOVE FOUND: {move}")
+        sim_board = _update_board(board, move, is_max)
+        if sim_board.check_win(sim_board.BLUE if is_max else sim_board.RED): # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
+            if show_AI: print(f"KILLER MOVE FOUND: {move}")
             best_move = move
+            best_score = np.inf
             break
-        score = alphabeta(sim_board, depth=depth, alpha=-np.inf, beta=np.inf, is_max=True) # For some reason performs better if you use is_max=False
-        print(f"CURRENT SCORE: {score}")
+        score = alphabeta(sim_board, depth=depth, alpha=-np.inf, beta=np.inf, is_max=is_max) # For some reason performs better if you use is_max=False
+        if show_AI: print(f"CURRENT SCORE: {score} for MOVE: {move}")
         if score > best_score:
             best_score = score
             best_move = move
-    print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
+    if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
     return best_move
 
 
