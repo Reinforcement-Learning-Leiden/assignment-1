@@ -4,7 +4,10 @@ for implementation purposes, do u know if we should code everything in one .py f
 
 ### TODO LIST:
 
-- [ ] Implement a smart heuristic for the eval function
-- [ ] Implement alpha-beta pruning and replace the naive minimax
+- [x] Implement a smart heuristic for the eval function
+- [x] Implement alpha-beta pruning and replace the naive minimax
 - [ ] Add Interactive Deepening and Transposition Tables, test again
-- [ ] Implement human interaction -> Function implemented, to be checked
+- [x] Implement human interaction -> Function implemented, to be checked
+- [ ] Implement ELO ratings for the AI using e.g. trueskill
+- [ ] If we have time: see where we can speed up the evaluation, it is very slow for >5 board sizes
+- [ ] Write a nice report!
