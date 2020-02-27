@@ -49,5 +49,6 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-# .DS_Store thingy
+# .DS_Store thingy and vscode json
 .DS_Store
+.vscode

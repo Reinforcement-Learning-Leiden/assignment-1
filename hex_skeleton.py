@@ -129,6 +129,7 @@ class HexBoard:
         return borders
 
     def undo_move(self):
+        #TODO: Remove this, already found a way around it.
         pass
 
     ###### Faezeh added
