@@ -132,6 +132,6 @@ class HexBoard:
         #TODO: Remove this, already found a way around it.
         pass
 
-    ###### Faezeh added
+    
     def get_board_size(self):
       return self.size
