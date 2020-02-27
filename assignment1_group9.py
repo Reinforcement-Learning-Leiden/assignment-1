@@ -71,7 +71,7 @@ def move_generator_random(size_of_board):
 ##########################################################
 
 def main():
-    board = HexBoard(3)
+    board = HexBoard(2)
     num_of_cells = board.get_board_size() * board.get_board_size()
     for nc in range(int(num_of_cells/2)):
         ## Just a small heuristic for opening strategy, you can test this if you want. But then you have to comment the move_blue below out too
@@ -80,25 +80,27 @@ def main():
         # else:
             # move_blue = ab.alphabeta_move(board, depth=2, is_max=True)
         
-        move_blue = ab.alphabeta_move(board, depth=2, is_max=True)
+        move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
         board = ab._update_board(board, move_blue, is_max=True)
         board.print()
         if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
             print("==== BLUE WINS ====")
             board.print()
-            break
+            # break
+            return "blue"
         move_red = ab.alphabeta_move(board, depth=2, is_max=True)
         board = ab._update_board(board, move_red, is_max=False) # Using false here and true for the alphabeta is a bit confusing, but we need it to make moves for red here.
         board.print()
         if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
             print("==== RED WINS ====")
             board.print()
-            break
+            # break
+            return "red"
 
 
-if __name__ == '__main__':
-    #while 1:
-    main()
+# if __name__ == '__main__':
+#     #while 1:
+#     main()
 
 
 
