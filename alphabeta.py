@@ -252,7 +252,8 @@ class TranspositionTable:
             print("lookup true",hash_v, hit, self.dict)
             return hit, self.dict[hash_v]["val"], self.dict[hash_v]["bm"]
         return hit
-
+    
+# ERROR WAS HERE, JUST PASSING AND DOING NOTHING
 def time_is_up(seconds: int):
     t = time.time()
     while not time.time() - t >= seconds:
@@ -265,15 +266,19 @@ def iterative_deepening(board: HexBoard, alpha: float, beta: float, is_max: bool
     d = 1
     itd1 = 0.0
     try:
-        while not time_is_up(max_seconds):
+        t = time.time()
+        while not time.time() - t >= max_seconds:
             # wait
+            print("inside iterative deepening while", '0000000', time.time())
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 future = executor.submit(alphabeta_Id, board, d, alpha, beta, is_max)
                 itd1 = future.result()
                 print(itd1)
             #itd1 = alphabeta_Id(board, d, alpha, beta, is_max)
             #release
+            print("inside iterative deepening while", '1111111', time.time())
             d = d+1
+            print("inside iterative deepening while", '2222222')
         print("inside iterative deepening", d)
     except:
         print("error in iterative deepening")
@@ -294,9 +299,8 @@ def alphabeta_Id(board: HexBoard, depth: int, alpha: float, beta: float, is_max:
     try:
         (hit, g, ttbm) = transposition_table.lookup(board,board.get_board_size(),depth)
         print("in alphabeta_Id", hit, g, ttbm)
-    except:
-        print("Exception in running lookup function")
-
+    except Exception as e:  #
+        print('Exception in running lookup function: ' + str(e))
     if hit():
         return g
 
