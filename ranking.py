@@ -49,5 +49,6 @@ if __name__ == '__main__':
     f.write('Execution time of AB with Dijkstra eval: ' + str(HexBoard.dTime) + ' seconds \n')
     f.write('Times Blue Player won: '+ str(blueWins)+', times Red Player won: '+ str(redWins)+ '\n')
     f.write('Final Results: '+final_results)
+    f.close()
 
     print(final_results)
