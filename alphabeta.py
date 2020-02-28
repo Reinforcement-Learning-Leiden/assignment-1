@@ -193,3 +193,191 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
 # print(a)
 # move = alphabeta_move(b, depth=4)
 # print(move)
+
+
+#### ITERATIVE DEPENING AND TRANSPOSITION TABLES
+
+import time
+import random
+
+
+class TranspositionTable:
+    BLUE = 1
+    RED = 2
+    EMPTY = 3
+
+    # TOASK: color needed?
+    def __init__(self,board,board_size):
+        self.board_size = board_size
+        self.zobTable = [[[random.randint(1, 2 ** 64 - 1) for i in range(2)] for j in range(self.board_size)] for k in
+                         range(self.board_size)]
+        #self.tbl_size = 2 ** 20  # experimental, can be changed
+        self.dict = {}
+
+
+    ### ZOBRIST HASHING
+
+    def indexing(self, piece):
+        ''' mapping colors to a particular number'''
+        if (piece == self.BLUE):
+            return 1
+        if (piece == self.RED):
+            return 2
+        else:
+            return -1
+
+    # each time a move is made on our board, whether during game play or alpha beta search we simply update the Zobrist Hash:
+    def computeHash(self, board, board_size):
+        h = 0
+        for i in range(board_size):
+            for j in range(board_size):
+                if board[i][j] != self.EMPTY:
+                    piece = self.indexing(board[i][j])
+                    h ^= self.zobTable[i][j][piece]
+        print("in hash function ", h)
+        board.print()
+        return h
+
+    def store(self, board,board_size, heuristic_val, depth, bestmove):
+        print("in store function ")
+        self.hashValue = self.computeHash(board,board_size)
+        self.dict[self.hashValue] = {"board":board, "val": heuristic_val,"depth":depth,"bm":bestmove}
+
+    def lookup(self, board,board_size, depth):
+        print("in lookup function ")
+        hit = False
+        hash_v = self.computeHash(board,board_size)
+        if hash_v in self.dict:
+            hit = True
+            print("lookup true",hash_v, hit, self.dict)
+            return hit, self.dict[hash_v]["val"], self.dict[hash_v]["bm"]
+        return hit
+
+def time_is_up(seconds: int):
+    t = time.time()
+    while not time.time() - t >= seconds:
+        pass
+    #print(time.time(), t, time.time() - t)
+    return True
+
+
+def iterative_deepening(board: HexBoard, alpha: float, beta: float, is_max: bool, max_seconds:int = 5):
+    d = 1
+    itd1 = 0.0
+    try:
+        while not time_is_up(max_seconds):
+            # wait
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(alphabeta_Id, board, d, alpha, beta, is_max)
+                itd1 = future.result()
+                print(itd1)
+            #itd1 = alphabeta_Id(board, d, alpha, beta, is_max)
+            #release
+            d = d+1
+        print("inside iterative deepening", d)
+    except:
+        print("error in iterative deepening")
+    return itd1
+
+transposition_table = TranspositionTable(_board,_board_size)
+
+# dic = {hashvalue:{board,val,depth,bm,}}
+dic_of_class = {}
+
+def very_simple(depth):
+    print("inside very siiiiiiiimple", depth)
+
+
+def alphabeta_Id(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bool) -> float:
+    # board.print()
+    print("in alphabeta_Id000000000")
+    try:
+        (hit, g, ttbm) = transposition_table.lookup(board,board.get_board_size(),depth)
+        print("in alphabeta_Id", hit, g, ttbm)
+    except:
+        print("Exception in running lookup function")
+
+    if hit():
+        return g
+
+    if depth == 0 or board.is_game_over():
+        g =  dijkstra_eval(board)
+        bm = ()
+
+    legals = board.get_move_list()
+    if legals:
+        if is_max:
+            g: float = -_INF
+
+            for move in ttbm+legals:
+                updated_board: HexBoard = _update_board(board, move, is_max) # y do we make the move first?
+                gc = alphabeta_Id(updated_board, depth-1,alpha,beta,is_max)
+                if gc > g:
+                    bm = updated_board
+                    g = gc
+
+                alpha = max(alpha, g)
+                if beta <= alpha:
+                    break
+
+        else: # if is_max False
+            g: float = _INF
+
+            for move in ttbm+legals:
+                updated_board: HexBoard = _update_board(board, move, is_max)
+                gc = alphabeta_Id(updated_board, depth - 1, alpha, beta, is_max)
+                if gc < g:
+                    bm = updated_board
+                    g = gc
+
+                beta = min(beta, g)
+                if beta <= alpha:
+                    break
+        transposition_table.store(updated_board,updated_board.get_board_size(),g,depth,bm)
+        return g
+
+    else:
+        print("NO MORE LEGAL MOVES LEFT")
+        return dijkstra_eval(board)
+
+
+
+# the function with iterative deepening
+def alphabeta_move_Id(board: HexBoard, is_max: bool, show_AI=False): #, depth: int
+    """
+    Set is_max to True for BLUE player, and False for RED player.
+    You can set the depth to whatever you want really, just don't go too deep it'll take forever.
+    Set show_AI to True if you want to see it's scoring process
+    """
+    legal_moves = board.get_move_list()
+    print("num of legal moves", len(legal_moves))
+    best_score = -np.inf
+    best_move = None
+    for move in legal_moves:
+        sim_board = _update_board(board, move, is_max)
+        if sim_board.check_win(
+                sim_board.BLUE if is_max else sim_board.RED):  # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
+            if show_AI: print(f"KILLER MOVE FOUND: {move}")
+            best_move = move
+            best_score = np.inf
+            break
+        #thread = threading.Thread(target=iterative_deepening, kwargs=dict(board = sim_board,alpha=-np.inf,beta = np.inf, is_max = is_max))
+        #thread.start()
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(iterative_deepening, sim_board, alpha=-np.inf, beta=np.inf,
+                          is_max=is_max)
+            score = future.result()
+            print("score ",score)
+        # wait here for the result to be available before continuing
+        #thread.join()
+        #score = iterative_deepening(sim_board, alpha=-np.inf, beta=np.inf,
+        #                 is_max=is_max)  # For some reason performs better if you use is_max=False
+        if show_AI: print(f"ID CURRENT SCORE: {score} for MOVE: {move}")
+        if score > best_score:
+            best_score = score
+            best_move = move
+    if show_AI: print(f"BEST MOVE_ID: {best_move} with BEST SCORE: {best_score}")
+    return best_move
+
+
+
