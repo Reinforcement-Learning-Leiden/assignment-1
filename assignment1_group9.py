@@ -1,7 +1,9 @@
 #### For now the file only contains the user input. To be expanded to the whole program
 
 from hex_skeleton import HexBoard
+import ttalphabeta as ttab
 import alphabeta as ab
+from transposition_table import TranspositionTable as TT
 import random
 
 #TODO: Add a heuristic start strategy to speed up the beginning of the game!!!!
@@ -82,6 +84,7 @@ def main(bluePlayer,redPlayer):
     HexBoard.dCutoffs=0
     HexBoard.d4Cutoffs=0
     HexBoard.rCutoffs=0
+    TT.ttCutoffs=0
     for nc in range(int(num_of_cells/2)):
 
         ## Just a small heuristic for opening strategy, you can test this if you want. But then you have to comment the move_blue below out too
@@ -98,6 +101,10 @@ def main(bluePlayer,redPlayer):
                     move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
                     HexBoard.d4Cutoffs+=HexBoard.cutoffs
                     HexBoard.cutoffs = 0
+                elif bluePlayer == 4:
+                    move_blue = ttab.iterative_deepening(board, is_max=True, max_seconds=20)
+
+
 
 
 
@@ -109,11 +116,13 @@ def main(bluePlayer,redPlayer):
                 HexBoard.total_dCutoffs+=HexBoard.dCutoffs
                 HexBoard.total_d4Cutoffs += HexBoard.d4Cutoffs
                 HexBoard.total_rCutoffs += HexBoard.rCutoffs
+                TT.total_ttCutoffs+=TT.ttCutoffs
                 print("==== BLUE WINS ====")
                 board.print()
                 print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
                 print('Cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.dCutoffs))
                 print('Cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.d4Cutoffs))
+                print('Cutoffs made by ID with TT ' + str(TT.ttCutoffs))
             # break
                 return "blue"
             if redPlayer == 1:
@@ -126,6 +135,8 @@ def main(bluePlayer,redPlayer):
                     move_red = ab.alphabeta_move(board, depth=4, is_max=True)
                     HexBoard.d4Cutoffs += HexBoard.cutoffs
                     HexBoard.cutoffs = 0
+            elif redPlayer == 4:
+                 move_red = ttab.iterative_deepening(board, is_max=True, max_seconds=20)
 
 
             #move_red = ab.alphabeta_move(board, depth=3, is_max=True)
@@ -136,11 +147,13 @@ def main(bluePlayer,redPlayer):
                 HexBoard.total_dCutoffs += HexBoard.dCutoffs
                 HexBoard.total_rCutoffs += HexBoard.rCutoffs
                 HexBoard.total_d4Cutoffs += HexBoard.d4Cutoffs
+                TT.total_ttCutoffs += TT.ttCutoffs
                 print("==== RED WINS ====")
                 board.print()
                 print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
                 print('Cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.dCutoffs))
                 print('Cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.d4Cutoffs))
+                print('Cutoffs made by ID with TT ' + str(TT.ttCutoffs))
             # break
                 return "red"
 
