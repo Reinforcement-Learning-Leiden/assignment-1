@@ -81,7 +81,7 @@ def main():
             # move_blue = ab.alphabeta_move(board, depth=2, is_max=True)
 
         move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
-
+        #move_blue = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
         board = ab._update_board(board, move_blue, is_max=True)
         board.print()
         if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
@@ -90,7 +90,7 @@ def main():
             # break
             return "blue"
         move_red = ab.alphabeta_move(board, depth=2, is_max=True)
-        #move_red = ab.alphabeta_move_Id(board, is_max=True)
+        #move_red = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
         board = ab._update_board(board, move_red, is_max=False) # Using false here and true for the alphabeta is a bit confusing, but we need it to make moves for red here.
         board.print()
         if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
