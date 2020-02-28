@@ -22,7 +22,7 @@ if __name__ == '__main__':
         'Choose red player! (type 1 for depth 3 with random eval, type 2 for depth 3 with dijkstra, type 3 for depth 4 with dijkstra)')
     redPlayer = int(input("Red Player: "))
 
-    for _ in range(4): # Play 12 games
+    for _ in range(2): # Play 12 games
         res = game.main(bluePlayer,redPlayer) # Main game loop
         if res == "blue": # If blue won
             blueWins+=1

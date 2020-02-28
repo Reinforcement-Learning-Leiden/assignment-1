@@ -80,6 +80,7 @@ def main(bluePlayer,redPlayer):
     board = HexBoard(4)
     num_of_cells = board.get_board_size() * board.get_board_size()
     HexBoard.dCutoffs=0
+    HexBoard.d4Cutoffs=0
     HexBoard.rCutoffs=0
     for nc in range(int(num_of_cells/2)):
 
@@ -106,6 +107,7 @@ def main(bluePlayer,redPlayer):
             board.print()
             if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
                 HexBoard.total_dCutoffs+=HexBoard.dCutoffs
+                HexBoard.total_d4Cutoffs += HexBoard.d4Cutoffs
                 HexBoard.total_rCutoffs += HexBoard.rCutoffs
                 print("==== BLUE WINS ====")
                 board.print()
@@ -133,6 +135,7 @@ def main(bluePlayer,redPlayer):
             if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
                 HexBoard.total_dCutoffs += HexBoard.dCutoffs
                 HexBoard.total_rCutoffs += HexBoard.rCutoffs
+                HexBoard.total_d4Cutoffs += HexBoard.d4Cutoffs
                 print("==== RED WINS ====")
                 board.print()
                 print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
