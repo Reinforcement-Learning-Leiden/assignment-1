@@ -57,52 +57,79 @@ def move_generator_random(size_of_board):
 #         if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
 #             print(win_message)
 #             board.print()
+#             print('Cutoffs: '+str(HexBoard.cutoffs))
 #             break
-#         move_program = ab.alphabeta_move(board, 3, is_max=True)
+#         move_program = ab.alphabeta_move(board, depth=3, is_max=True)
 #         board = ab._update_board(board, move_program, True)
 #         board.print()
 #         if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
 #             print(loss_message)
 #             board.print()
+#             print('Cutoffs: ' + str(HexBoard.cutoffs))
 #             break
 
 ##########################################################
 #               CODE BLOCK FOR AI VS AI                  #
 ##########################################################
 
-def main():
-    board = HexBoard(2)
+def main(bluePlayer,redPlayer):
+
+    board = HexBoard(4)
     num_of_cells = board.get_board_size() * board.get_board_size()
+    HexBoard.dCutoffs=0
+    HexBoard.rCutoffs=0
     for nc in range(int(num_of_cells/2)):
+
         ## Just a small heuristic for opening strategy, you can test this if you want. But then you have to comment the move_blue below out too
-        # if board.size % 2 != 0 and len(board.get_move_list()) == len(board.get_all_vertices()): # If it's the first move and the board is uneven
-        #     move_blue = (board.size // 2, board.size // 2) # Always place the first move in the middle
-        # else:
-            # move_blue = ab.alphabeta_move(board, depth=2, is_max=True)
+            if board.size % 2 != 0 and len(board.get_move_list()) == len(board.get_all_vertices()): # If it's the first move and the board is uneven
+                move_blue = (board.size // 2, board.size // 2) # Always place the first move in the middle
+            else:
+                if bluePlayer == 1:
+                    move_blue = ab.alphabeta_moveR(board, depth=3, is_max=True)
+                elif bluePlayer == 2:
+                    move_blue = ab.alphabeta_move(board, depth=3, is_max=True)
+                elif bluePlayer == 3:
+                    move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
 
-        move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
+
+
+        #move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
         #move_blue = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
-        board = ab._update_board(board, move_blue, is_max=True)
-        board.print()
-        if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
-            print("==== BLUE WINS ====")
+            board = ab._update_board(board, move_blue, is_max=True)
             board.print()
+            if board.is_game_over(): # TODO: add condition for game over without no winning (board full)
+                HexBoard.total_dCutoffs+=HexBoard.dCutoffs
+                HexBoard.total_rCutoffs += HexBoard.rCutoffs
+                print("==== BLUE WINS ====")
+                board.print()
+                print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.dCutoffs))
             # break
-            return "blue"
-        move_red = ab.alphabeta_move(board, depth=2, is_max=True)
-        #move_red = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
-        board = ab._update_board(board, move_red, is_max=False) # Using false here and true for the alphabeta is a bit confusing, but we need it to make moves for red here.
-        board.print()
-        if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
-            print("==== RED WINS ====")
+                return "blue"
+            if redPlayer == 1:
+                    move_red = ab.alphabeta_moveR(board, depth=3, is_max=True)
+            elif redPlayer == 2:
+                    move_red = ab.alphabeta_move(board, depth=3, is_max=True)
+            elif redPlayer == 3:
+                    move_red = ab.alphabeta_move(board, depth=4, is_max=True)
+            #move_red = ab.alphabeta_move(board, depth=3, is_max=True)
+            #move_red = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
+            board = ab._update_board(board, move_red, is_max=False) # Using false here and true for the alphabeta is a bit confusing, but we need it to make moves for red here.
             board.print()
+            if board.is_game_over():  # TODO: add condition for game over without no winning (board full)
+                HexBoard.total_dCutoffs += HexBoard.dCutoffs
+                HexBoard.total_rCutoffs += HexBoard.rCutoffs
+                print("==== RED WINS ====")
+                board.print()
+                print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.dCutoffs))
             # break
-            return "red"
+                return "red"
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     #while 1:
-#     main()
+     main()
 
 
 

@@ -129,8 +129,32 @@ def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
             best_move = move
     if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
     return best_move
-
-
+############################################################################
+def alphabeta_moveR(board:HexBoard, depth:int, is_max:bool, show_AI=False):
+    """
+    Set is_max to True for BLUE player, and False for RED player.
+    You can set the depth to whatever you want really, just don't go too deep it'll take forever.
+    Set show_AI to True if you want to see it's scoring process
+    """
+    legal_moves = board.get_move_list()
+    best_score = -np.inf
+    best_move = None
+    for move in legal_moves:
+        sim_board = _update_board(board, move, is_max)
+        if sim_board.check_win(sim_board.BLUE if is_max else sim_board.RED): # KILLER MOVE: If we find a move in the simulation that wins, make that move no matter what
+            if show_AI: print(f"KILLER MOVE FOUND: {move}")
+            best_move = move
+            best_score = np.inf
+            break
+        score = alphabetaRandom(sim_board, depth=depth, alpha=-np.inf, beta=np.inf, is_max=is_max) # For some reason performs better if you use is_max=False
+        if show_AI: print(f"CURRENT SCORE: {score} for MOVE: {move}")
+        if score > best_score:
+            best_score = score
+            best_move = move
+    if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
+    return best_move
+###########################################################################################
+### alphabeta with Dijkstra evaluation ###
 def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bool) -> float:
     # board.print()
     if depth == 0 or board.is_game_over():
@@ -149,6 +173,7 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
 
                 alpha = max(alpha, g)
                 if beta <= alpha:
+                    HexBoard.dCutoffs+=1
                     break
 
         else:
@@ -161,6 +186,7 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
 
                 beta = min(beta, g)
                 if beta <= alpha:
+                    HexBoard.dCutoffs+=1
                     break
     
         return g
@@ -168,6 +194,51 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
     else:
         print("NO MORE LEGAL MOVES LEFT")
         return dijkstra_eval(board)
+
+#######################################################################################
+### AlphaBeta with random evaluation ###
+def alphabetaRandom(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bool) -> float:
+    # board.print()
+    if depth == 0 or board.is_game_over():
+        return dummy_eval()
+
+    legals = board.get_move_list()
+    if legals:
+
+        if is_max:
+            g: float = -_INF
+
+            for move in legals:
+                updated_board: HexBoard = _update_board(board, move, is_max)
+                g = max(g, alphabetaRandom(updated_board,
+                                     depth - 1, alpha, beta, is_max=False))
+
+                alpha = max(alpha, g)
+                if beta <= alpha:
+                    HexBoard.rCutoffs += 1
+                    break
+
+        else:
+            g: float = _INF
+
+            for move in legals:
+                updated_board: HexBoard = _update_board(board, move, is_max)
+                g = min(g, alphabetaRandom(updated_board,
+                                     depth - 1, alpha, beta, is_max=True))
+
+                beta = min(beta, g)
+                if beta <= alpha:
+                    HexBoard.rCutoffs += 1
+                    break
+
+        return g
+
+    else:
+        print("NO MORE LEGAL MOVES LEFT")
+        return dummy_eval()
+#########################################################################################
+
+
 
 ## UNCOMMENT BELOW IF YOU WANT TO START THE GAME IN A FIXED STATE
 # _board.place((1,1), _board.BLUE)

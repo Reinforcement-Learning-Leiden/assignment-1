@@ -3,6 +3,12 @@ class HexBoard:
     RED = 2
     EMPTY = 3
 
+
+    dCutoffs=0      #cutoffs made by the alphabeta with random eval
+    rCutoffs=0      #cutoffs made by the alphabeta with Dijkstra eval
+    total_dCutoffs=0
+    total_rCutoffs=0
+
     def __init__(self, board_size):
         self.board = {}
         self.size = board_size
