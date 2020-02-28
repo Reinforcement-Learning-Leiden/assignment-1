@@ -24,10 +24,10 @@ def simple_dijkstra(board: HexBoard, source, is_max):
     # dist_clone = {}  # I made a clone of dist to retain the information in dist
     prev = {}
     for v in V_set:
-        if v != source:
-            dist[v] = np.inf
-            # dist_clone[v] = np.inf  # clone
-            prev[v] = None
+        # if v != source:
+        dist[v] = np.inf
+        # dist_clone[v] = np.inf  # clone
+        prev[v] = None
         Q.add_task(task=v, priority=dist[v])  # add task with prio
     dist[source] = 0
     # dist_clone[source] = dist[source]  # clone
@@ -38,27 +38,22 @@ def simple_dijkstra(board: HexBoard, source, is_max):
 
         color = board.BLUE if is_max else board.RED
 
-        neighbors = board.get_neighbors(u)
+        neighbors = board.get_neighbors(u[2])  # Get last value of u
 
         for v in neighbors:
             if v in Q.pq:  # Only check neighbours that are also in "Q"
-                # this isn't working as intended i think...
                 len_u_v = -1 if board.is_color(v, color) else 1
                 ### BLOCK TO MAKE AI MORE AGGRESSIVE ###
                 # If there is a move that reaches the border in the simulation
-                if board.border(color, v):
-                    if board.check_win(color):  # And it results in a win
-                        len_u_v = -2  # Make that move more valuable
+                # if board.border(color, v):
+                #     if board.check_win(color):  # And it results in a win
+                #         len_u_v = -2  # Make that move more valuable
                 ### END OF AGGRO BLOCK ###
                 alt = dist[u] + len_u_v
                 if alt < dist[v]:
                     dist[v] = alt
-                    # dist_clone[v] = dist[v]
                     prev[v] = u
                     Q.add_task(v, alt)
-        # We pop "u" from the distance dict to ensure that the keys match the ones in "Q"
-        # This is also why we need the clone, or else we'll return an empty dict
-        # dist.pop(u)
 
     return dist, prev
 
@@ -66,9 +61,11 @@ def simple_dijkstra(board: HexBoard, source, is_max):
 def get_shortest_path(board: HexBoard, distances, color):
     """Gets the shortest path to a border and returns the length as score"""
     borders = board.get_borders(color)
+    filtered_borders = list(
+        filter(lambda x: x in board.get_move_list(), borders))
     # print(f"ALL BORDERS: {borders}")
     shortest = np.inf
-    for border in borders:
+    for border in filtered_borders:
         # print(f"Dist for current border {border} is: {distances[border]}")
         if distances[border] < shortest:
             shortest = distances[border]
