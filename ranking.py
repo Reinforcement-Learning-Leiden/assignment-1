@@ -22,7 +22,7 @@ if __name__ == '__main__':
         'Choose red player! (type 1 for depth 3 with random eval, type 2 for depth 3 with dijkstra, type 3 for depth 4 with dijkstra)')
     redPlayer = int(input("Red Player: "))
 
-    for _ in range(2): # Play 12 games
+    for _ in range(4): # Play 12 games
         res = game.main(bluePlayer,redPlayer) # Main game loop
         if res == "blue": # If blue won
             blueWins+=1
@@ -35,20 +35,25 @@ if __name__ == '__main__':
     final_results.append("BLUE'S RANK: " + str(blue.mu))
     final_results.append("RED'S RANK: " + str(red.mu))
     print('Total cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.total_rCutoffs))
-    print('Total cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.total_dCutoffs))
+    print('Total cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.total_dCutoffs))
+    print('Total cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.total_d4Cutoffs))
     print('Execution time of AB with random eval: '+ str(HexBoard.rTime) + ' seconds')
-    print('Execution time of AB with Dijkstra eval: ' + str(HexBoard.dTime) + ' seconds')
+    print('Execution time of AB with Dijkstra eval depth 3: ' + str(HexBoard.dTime) + ' seconds')
+    print('Execution time of AB with Dijkstra eval depth 4: ' + str(HexBoard.d4Time) + ' seconds')
 
 
     f=open("results.txt" , "w+")
 
     f.write('Blue Player: '+dictionary[bluePlayer]+' VS Red Player: '+ dictionary[redPlayer]+'\n')
     f.write('Total cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.total_rCutoffs) + '\n')
-    f.write('Total cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.total_dCutoffs)+ '\n')
+    f.write('Total cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.total_dCutoffs)+ '\n')
+    f.write('Total cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.total_d4Cutoffs) + '\n')
     f.write('Execution time of AB with random eval: '+ str(HexBoard.rTime) + ' seconds \n')
-    f.write('Execution time of AB with Dijkstra eval: ' + str(HexBoard.dTime) + ' seconds \n')
+    f.write('Execution time of AB with Dijkstra eval depth 3: ' + str(HexBoard.dTime) + ' seconds \n')
+    f.write('Execution time of AB with Dijkstra eval depth 4: ' + str(HexBoard.d4Time) + ' seconds \n')
     f.write('Times Blue Player won: '+ str(blueWins)+', times Red Player won: '+ str(redWins)+ '\n')
-    f.write('Final Results: '+final_results)
+    f.write("BLUE'S RANK: " + str(blue.mu))
+    f.write("RED'S RANK: " + str(red.mu))
     f.close()
 
     print(final_results)

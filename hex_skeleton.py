@@ -3,14 +3,17 @@ class HexBoard:
     RED = 2
     EMPTY = 3
 
-
+    cutoffs=0
     dCutoffs=0      #cutoffs made by the alphabeta with random eval
+    d4Cutoffs=0
     rCutoffs=0      #cutoffs made by the alphabeta with Dijkstra eval
     total_dCutoffs=0
     total_rCutoffs=0
+    total_d4Cutoffs=0
 
     rTime=0
     dTime=0
+    d4Time=0
 
 
 

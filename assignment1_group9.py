@@ -91,8 +91,12 @@ def main(bluePlayer,redPlayer):
                     move_blue = ab.alphabeta_moveR(board, depth=3, is_max=True)
                 elif bluePlayer == 2:
                     move_blue = ab.alphabeta_move(board, depth=3, is_max=True)
+                    HexBoard.dCutoffs+=HexBoard.cutoffs
+                    HexBoard.cutoffs=0
                 elif bluePlayer == 3:
                     move_blue = ab.alphabeta_move(board, depth=4, is_max=True)
+                    HexBoard.d4Cutoffs+=HexBoard.cutoffs
+                    HexBoard.cutoffs = 0
 
 
 
@@ -106,15 +110,22 @@ def main(bluePlayer,redPlayer):
                 print("==== BLUE WINS ====")
                 board.print()
                 print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
-                print('Cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.dCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.dCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.d4Cutoffs))
             # break
                 return "blue"
             if redPlayer == 1:
                     move_red = ab.alphabeta_moveR(board, depth=3, is_max=True)
             elif redPlayer == 2:
                     move_red = ab.alphabeta_move(board, depth=3, is_max=True)
+                    HexBoard.dCutoffs += HexBoard.cutoffs
+                    HexBoard.cutoffs = 0
             elif redPlayer == 3:
                     move_red = ab.alphabeta_move(board, depth=4, is_max=True)
+                    HexBoard.d4Cutoffs += HexBoard.cutoffs
+                    HexBoard.cutoffs = 0
+
+
             #move_red = ab.alphabeta_move(board, depth=3, is_max=True)
             #move_red = ab.alphabeta_move_Id(board, is_max=True, show_AI=True)
             board = ab._update_board(board, move_red, is_max=False) # Using false here and true for the alphabeta is a bit confusing, but we need it to make moves for red here.
@@ -125,7 +136,8 @@ def main(bluePlayer,redPlayer):
                 print("==== RED WINS ====")
                 board.print()
                 print('Cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.rCutoffs))
-                print('Cutoffs made by AlphaBeta with Dijkstra eval: ' + str(HexBoard.dCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval depth 3: ' + str(HexBoard.dCutoffs))
+                print('Cutoffs made by AlphaBeta with Dijkstra eval depth 4: ' + str(HexBoard.d4Cutoffs))
             # break
                 return "red"
 

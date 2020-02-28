@@ -130,9 +130,12 @@ def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
             best_score = score
             best_move = move
     if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
-    HexBoard.dTime+=time.time()-start_time
+    if depth==3:    HexBoard.dTime+=time.time()-start_time
+    if depth==4:    HexBoard.d4Time+=time.time()-start_time
+
     return best_move
 ############################################################################
+#move with random eval#
 def alphabeta_moveR(board:HexBoard, depth:int, is_max:bool, show_AI=False):
     """
     Set is_max to True for BLUE player, and False for RED player.
@@ -178,7 +181,7 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
 
                 alpha = max(alpha, g)
                 if beta <= alpha:
-                    HexBoard.dCutoffs+=1
+                    HexBoard.cutoffs+=1
                     break
 
         else:
@@ -191,7 +194,7 @@ def alphabeta(board: HexBoard, depth: int, alpha: float, beta: float, is_max: bo
 
                 beta = min(beta, g)
                 if beta <= alpha:
-                    HexBoard.dCutoffs+=1
+                    HexBoard.cutoffs+=1
                     break
     
         return g
