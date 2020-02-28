@@ -9,6 +9,11 @@ class HexBoard:
     total_dCutoffs=0
     total_rCutoffs=0
 
+    rTime=0
+    dTime=0
+
+
+
     def __init__(self, board_size):
         self.board = {}
         self.size = board_size

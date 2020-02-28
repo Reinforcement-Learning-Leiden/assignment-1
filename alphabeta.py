@@ -1,5 +1,6 @@
 from hex_skeleton import HexBoard
 import copy
+import time
 
 import numpy as np
 
@@ -112,6 +113,7 @@ def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
     You can set the depth to whatever you want really, just don't go too deep it'll take forever.
     Set show_AI to True if you want to see it's scoring process
     """
+    start_time=time.time()
     legal_moves = board.get_move_list()
     best_score = -np.inf
     best_move = None
@@ -128,6 +130,7 @@ def alphabeta_move(board:HexBoard, depth:int, is_max:bool, show_AI=False):
             best_score = score
             best_move = move
     if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
+    HexBoard.dTime+=time.time()-start_time
     return best_move
 ############################################################################
 def alphabeta_moveR(board:HexBoard, depth:int, is_max:bool, show_AI=False):
@@ -136,6 +139,7 @@ def alphabeta_moveR(board:HexBoard, depth:int, is_max:bool, show_AI=False):
     You can set the depth to whatever you want really, just don't go too deep it'll take forever.
     Set show_AI to True if you want to see it's scoring process
     """
+    start_time=time.time()
     legal_moves = board.get_move_list()
     best_score = -np.inf
     best_move = None
@@ -152,6 +156,7 @@ def alphabeta_moveR(board:HexBoard, depth:int, is_max:bool, show_AI=False):
             best_score = score
             best_move = move
     if show_AI: print(f"BEST MOVE: {best_move} with BEST SCORE: {best_score}")
+    HexBoard.rTime += time.time() - start_time
     return best_move
 ###########################################################################################
 ### alphabeta with Dijkstra evaluation ###

@@ -14,6 +14,9 @@ loss_message = "******************************************\n\
 *              YOU LOSE                  *\n\
 ******************************************"
 
+redWins=0
+blueWins=0
+
 def human_input(size_of_board): # TOASK: is it efficient to pass board as arguement? better way to retrieve board size?
     # TODO: This is fine, but we can add a try/catch block to make sure the user can't crash the main loop
     input_user = input("Your Turn: ")
