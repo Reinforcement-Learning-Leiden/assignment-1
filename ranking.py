@@ -1,15 +1,27 @@
 import trueskill as ts
 import assignment1_group9 as game
 from hex_skeleton import HexBoard
+import matplotlib.pyplot as plt
 
 #TODO: Implement trueskill to rank the AI
 
 if __name__ == '__main__':
     #while 1:
+    
+     # FOR PLOT ADDED
+    to_plot_x = []
+    to_plot_blue = []
+    to_plot_red = []
+    
     final_results = []
     # Create fresh ratings for both players
     blue = ts.Rating()
     red = ts.Rating()
+
+    # FOR PLOT ADDED
+    to_plot_x.append(0)
+    to_plot_blue.append(blue.mu)
+    to_plot_red.append(red.mu)
 
     redWins = 0
     blueWins = 0
@@ -32,6 +44,18 @@ if __name__ == '__main__':
             red, blue = ts.rate_1vs1(red, blue)
         else: # If the game somehow resulted in a draw
             blue, red = ts.rate_1vs1(blue, red, drawn=True)
+            
+        # FOR PLOT ADDED
+        to_plot_x.append(_)
+        to_plot_blue.append(blue.mu)
+        to_plot_red.append(red.mu)
+        plt.plot(to_plot_x, to_plot_blue)
+        plt.plot(to_plot_x, to_plot_red)
+        plt.show()
+
+        plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
+        #plt.close()
+        
     final_results.append("BLUE'S RANK: " + str(blue.mu))
     final_results.append("RED'S RANK: " + str(red.mu))
     print('Total cutoffs made by AlphaBeta with random eval: ' + str(HexBoard.total_rCutoffs))
