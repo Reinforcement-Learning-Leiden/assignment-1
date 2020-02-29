@@ -8,11 +8,13 @@ from transposition_table import TranspositionTable as TT
 
 from hex_skeleton import HexBoard
 
+### GLOBALS ###
 BOARD_SIZE_TTID: int = 4
 BLUE_SEC_TO_THINK: int = 5
 RED_SEC_TO_THINK: int = 5
 NUMBER_OF_GAMES: int = 12
-
+DIJKSTRA_DEAPTH: int = 4
+###############
 
 def main():
     board = HexBoard(BOARD_SIZE_TTID)
@@ -35,7 +37,7 @@ def main():
             board.print()
             return "blue"
         move_red = ab.alphabeta_move(
-            board,depth=4, is_max=False, show_AI=False)
+            board,depth=DIJKSTRA_DEAPTH, is_max=False, show_AI=False)
         board=ab._update_board(board, move_red, is_max=False)
         board.print()
         if board.is_game_over():
