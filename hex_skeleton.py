@@ -142,9 +142,10 @@ class HexBoard:
                 borders.append((i, p))
         return borders
 
-    def undo_move(self):
-        #TODO: Remove this, already found a way around it.
-        pass
+    def undo_move(self,coordinates):
+        self.board[coordinates]=HexBoard.EMPTY
+
+
 
     
     def get_board_size(self):
