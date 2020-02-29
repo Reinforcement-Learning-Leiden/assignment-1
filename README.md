@@ -2,9 +2,13 @@
 ## Group 9
 ### Julius Cathalina, Faezeh Amou, Georgios Tzimitras
 
+## If you're not sure you have all the right packages, remember to run
+### pip install -r requirements.txt
+
 # Important files:
 ### ranking.py
 - Contains the scripts and experiments for all the non-transposition table alphabeta search implementations
+- Contains parameters that you can modify to adjust e.g. the AI search depth
 
 ### idtt_ranking.py
 - Contains the scripts and experiments for the transposition table / iterative deepening alphabeta search
