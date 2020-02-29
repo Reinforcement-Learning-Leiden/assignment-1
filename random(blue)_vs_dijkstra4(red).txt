@@ -1,0 +1,9 @@
+Blue Player: AB with random eval depth 3 VS Red Player: AB with Dijkstra eval depth 4
+Total cutoffs made by AlphaBeta with random eval: 95734
+Total cutoffs made by AlphaBeta with Dijkstra eval depth 3: 0
+Total cutoffs made by AlphaBeta with Dijkstra eval depth 4: 991857
+Execution time of AB with random eval: 135.78617525100708 seconds 
+Execution time of AB with Dijkstra eval depth 3: 0 seconds 
+Execution time of AB with Dijkstra eval depth 4: 10115.14507317543 seconds 
+Times Blue Player won: 1, times Red Player won: 11
+BLUE'S RANK: 21.174154630331895RED'S RANK: 28.825845369668098
