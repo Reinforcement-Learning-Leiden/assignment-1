@@ -34,9 +34,11 @@ if __name__ == '__main__':
         'Choose red player! (type 1 for depth 3 with random eval, type 2 for depth 3 with dijkstra, type 3 for depth 4 with dijkstra)')
     redPlayer = int(input("Red Player: "))
 
+    boardSize=int(input('Choose the size of the board: '))
+
     for _ in range(2): # Play 12 games
         print("GAME Number:" , str(_))
-        res = game.main(bluePlayer,redPlayer) # Main game loop
+        res = game.main(bluePlayer,redPlayer,boardSize) # Main game loop
         if res == "blue": # If blue won
             blueWins+=1
             blue, red = ts.rate_1vs1(blue, red) # first rating is winner, second is loser
@@ -50,14 +52,15 @@ if __name__ == '__main__':
         to_plot_x.append(_)
         to_plot_blue.append(blue.mu)
         to_plot_red.append(red.mu)
-     plt.xlabel("# of games")
-     plt.ylabel("player rating")
-     plt.plot(to_plot_x, to_plot_blue)
-     plt.plot(to_plot_x, to_plot_red)
-     plt.savefig('hist_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
-     plt.show()
 
-        plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
+    plt.xlabel("# of games")
+    plt.ylabel("player rating")
+    plt.plot(to_plot_x, to_plot_blue)
+    plt.plot(to_plot_x, to_plot_red)
+     #plt.savefig('hist_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
+    plt.show()
+
+    plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
         #plt.close()
         
     final_results.append("BLUE'S RANK: " + str(blue.mu))

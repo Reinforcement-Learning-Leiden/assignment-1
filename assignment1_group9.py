@@ -75,9 +75,9 @@ def move_generator_random(size_of_board):
 #               CODE BLOCK FOR AI VS AI                  #
 ##########################################################
 
-def main(bluePlayer,redPlayer):
+def main(bluePlayer,redPlayer,bSize):
 
-    board = HexBoard(4)
+    board = HexBoard(bSize)
     num_of_cells = board.get_board_size() * board.get_board_size()
     HexBoard.dCutoffs=0
     HexBoard.d4Cutoffs=0
