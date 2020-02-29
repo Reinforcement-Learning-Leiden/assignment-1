@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
     #while 1:
     
-     # FOR PLOT ADDED
+    # FOR PLOT ADDED
     to_plot_x = []
     to_plot_blue = []
     to_plot_red = []
@@ -35,6 +35,7 @@ if __name__ == '__main__':
     redPlayer = int(input("Red Player: "))
 
     for _ in range(2): # Play 12 games
+        print("GAME Number:" , str(_))
         res = game.main(bluePlayer,redPlayer) # Main game loop
         if res == "blue": # If blue won
             blueWins+=1
@@ -49,9 +50,12 @@ if __name__ == '__main__':
         to_plot_x.append(_)
         to_plot_blue.append(blue.mu)
         to_plot_red.append(red.mu)
-        plt.plot(to_plot_x, to_plot_blue)
-        plt.plot(to_plot_x, to_plot_red)
-        plt.show()
+     plt.xlabel("# of games")
+     plt.ylabel("player rating")
+     plt.plot(to_plot_x, to_plot_blue)
+     plt.plot(to_plot_x, to_plot_red)
+     plt.savefig('hist_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
+     plt.show()
 
         plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
         #plt.close()
