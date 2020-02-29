@@ -1,13 +1,16 @@
-Guys can you please check assignment1_group9.py and play with the code to see if rules are implemented correctly? like winnig conditions and colors, topdown, leftright rules etc?
-the code works with a random move generator, and alphabeta not used yet.
-for implementation purposes, do u know if we should code everything in one .py file or any rule there is?
+# Reinforcement Learning 2020 Assignment 1
+## Group 9
+### Julius Cathalina, Faezeh Amou, Georgios Tzimitras
 
-### TODO LIST:
+# Important files:
+### ranking.py
+- Contains the scripts and experiments for all the non-transposition table alphabeta search implementations
 
-- [x] Implement a smart heuristic for the eval function
-- [x] Implement alpha-beta pruning and replace the naive minimax
-- [ ] Add Interactive Deepening and Transposition Tables, test again
-- [x] Implement human interaction -> Function implemented, to be checked
-- [ ] Implement ELO ratings for the AI using e.g. trueskill
-- [ ] If we have time: see where we can speed up the evaluation, it is very slow for >5 board sizes
-- [ ] Write a nice report!
+### idtt_ranking.py
+- Contains the scripts and experiments for the transposition table / iterative deepening alphabeta search
+- Use 'ttalphabeta.py' if you want to change the board size (TTID_BOARD_SIZE), this is done to perserve consistency between the zobrist table and the board across files.
+- You can use the parameters to set the time limit, depth search limit of the AI.
+
+### human_vs_ai.py
+- Lets you play against either the TTID variant or the normal alphabeta variant
+- Option 1 is against the normal, Option 2 is against TTID
