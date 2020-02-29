@@ -2,6 +2,7 @@ import trueskill as ts
 import assignment1_group9 as game
 from hex_skeleton import HexBoard
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt2
 
 #TODO: Implement trueskill to rank the AI
 
@@ -12,6 +13,10 @@ if __name__ == '__main__':
     to_plot_x = []
     to_plot_blue = []
     to_plot_red = []
+    plot_rcutoffs=[]
+    plot_dcutoffs=[]
+    plot_d4cutoffs=[]
+
     
     final_results = []
     # Create fresh ratings for both players
@@ -52,6 +57,43 @@ if __name__ == '__main__':
         to_plot_x.append(_)
         to_plot_blue.append(blue.mu)
         to_plot_red.append(red.mu)
+        # BAR
+        plot_rcutoffs.append(HexBoard.rCutoffs)
+        plot_dcutoffs.append(HexBoard.dCutoffs)
+        plot_d4cutoffs.append(HexBoard.d4Cutoffs)
+
+        
+    #BAR
+    n_groups = 12
+    # create plot
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.22
+    opacity = 0.8
+    rects1 = plt.bar(index, plot_rcutoffs, bar_width,
+                     alpha=opacity,
+                     color='b',
+                     label='Random Evaluation')
+
+    rects2 = plt.bar(index + bar_width, plot_dcutoffs, bar_width,
+                     alpha=opacity,
+                     color='g',
+                     label='Dijkstra Depth3')
+
+    rects2 = plt.bar(index + 2*bar_width, plot_d4cutoffs, bar_width,
+                     alpha=opacity,
+                     color='r',
+                     label='Dijkstra Depth4')
+
+    plt2.xlabel('Game number')
+    plt2.ylabel('number of cutoffs')
+    plt2.title('Cut offs made by each evaluation method')
+    plt2.xticks(index + bar_width, range(12))
+    plt2.legend()
+
+    plt2.tight_layout()
+    plt2.savefig('bar_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
+    plt2.show()
 
     plt.xlabel("# of games")
     plt.ylabel("player rating")
