@@ -4,9 +4,9 @@ class HexBoard:
     EMPTY = 3
 
     cutoffs=0
-    dCutoffs=0      #cutoffs made by the alphabeta with random eval
+    dCutoffs=0      #cutoffs made by the aplphabeta with Dijkstra
     d4Cutoffs=0
-    rCutoffs=0      #cutoffs made by the alphabeta with Dijkstra eval
+    rCutoffs=0      #cutoffs made by the alphabeta with random eval
     total_dCutoffs=0
     total_rCutoffs=0
     total_d4Cutoffs=0

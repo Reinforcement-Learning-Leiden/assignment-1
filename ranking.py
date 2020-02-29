@@ -3,6 +3,7 @@ import assignment1_group9 as game
 from hex_skeleton import HexBoard
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt2
+import numpy as np
 
 #TODO: Implement trueskill to rank the AI
 
@@ -41,7 +42,7 @@ if __name__ == '__main__':
 
     boardSize=int(input('Choose the size of the board: '))
 
-    for _ in range(2): # Play 12 games
+    for _ in range(12): # Play 12 games
         print("GAME Number:" , str(_))
         res = game.main(bluePlayer,redPlayer,boardSize) # Main game loop
         if res == "blue": # If blue won
@@ -99,10 +100,10 @@ if __name__ == '__main__':
     plt.ylabel("player rating")
     plt.plot(to_plot_x, to_plot_blue)
     plt.plot(to_plot_x, to_plot_red)
-     #plt.savefig('hist_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
+    plt.savefig('hist_type%d_vs_type%d.png' % (bluePlayer, redPlayer))
     plt.show()
 
-    plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
+    #plt.savefig('hist_%s_vs_%s.png' % (dictionary[bluePlayer] , dictionary[redPlayer]))
         #plt.close()
         
     final_results.append("BLUE'S RANK: " + str(blue.mu))
